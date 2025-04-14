@@ -46,7 +46,7 @@ document.querySelectorAll(".sentence").forEach(div => {
       span.classList.add("highlight");
       const tempUtter = new SpeechSynthesisUtterance(span.textContent);
       tempUtter.lang = lang;
-      tempUtter.rate = 2;
+      tempUtter.rate = 1;
       speechSynthesis.cancel();
       speechSynthesis.speak(tempUtter);
     });
@@ -64,7 +64,7 @@ document.querySelectorAll(".sentence").forEach(div => {
       span.classList.add("highlight");
       const tempUtter = new SpeechSynthesisUtterance(span.textContent);
       tempUtter.lang = lang;
-      tempUtter.rate = 2;
+      tempUtter.rate = 1;
       speechSynthesis.cancel();
       speechSynthesis.speak(tempUtter);
       setTimeout(() => span.classList.remove("highlight"), 1000);
