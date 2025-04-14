@@ -1,27 +1,30 @@
 body {
-  font-family: sans-serif;
-  padding: 2rem;
-  line-height: 2;
-  background: #f9f9f9;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+#container {
+    position: relative;
+    width: 80%;
 }
 
-.sentence {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1.2rem;
-  cursor: pointer;
+.text-content {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 2rem;
 }
 
-.sentence span {
-  padding: 0 4px;
-  transition: background 0.2s;
+.highlight {
+    background-color: yellow;
 }
 
-.sentence span.highlight {
-  background-color: yellow;
+.text-content div {
+    margin-bottom: 20px;
 }
