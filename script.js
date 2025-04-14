@@ -1,104 +1,93 @@
-const voiceMap = {};
-let voicesLoaded = false;
+const textContainers = document.querySelectorAll('.text-container');
 
-function loadVoices() {
-  const voices = speechSynthesis.getVoices();
-  voices.forEach(voice => {
-    if (voice.lang.startsWith('en')) voiceMap['en'] = voice;
-    else if (voice.lang.startsWith('fr')) voiceMap['fr'] = voice;
-    else if (voice.lang.startsWith('ar')) voiceMap['ar'] = voice;
-    else if (voice.lang.startsWith('fa')) voiceMap['fa'] = voice;
+textContainers.forEach(container => {
+  const lang = container.getAttribute('data-lang');
+  const sentence = container.textContent.trim();
+  container.innerHTML = ''; // Clear and replace with spans
+
+  const words = sentence.split(/\s+/);
+  words.forEach((word, index) => {
+    const span = document.createElement('span');
+    span.textContent = word + ' ';
+    span.classList.add('word');
+    span.dataset.index = index;
+    container.appendChild(span);
+
+    // Double tap (mobile) support
+    let lastTap = 0;
+    span.addEventListener('click', (e) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      if (tapLength < 300 && tapLength > 0) {
+        handleHover(span, lang);
+      } else {
+        handleClick(span, lang, words);
+      }
+      lastTap = currentTime;
+    });
+
+    // Desktop hover
+    span.addEventListener('mouseenter', () => handleHover(span, lang));
+    span.addEventListener('click', () => handleClick(span, lang, words));
   });
-  voicesLoaded = true;
-}
-speechSynthesis.onvoiceschanged = loadVoices;
-loadVoices();
-
-function wrapWords() {
-  document.querySelectorAll("p").forEach(p => {
-    const lang = p.getAttribute("lang");
-    const text = p.textContent.trim();
-    p.innerHTML = text
-      .split(" ")
-      .map(word => `<span class="word" data-lang="${lang}">${word}</span>`)
-      .join(" ");
-  });
-}
-
-wrapWords();
-
-document.addEventListener("click", (e) => {
-  if (!e.target.classList.contains("word")) return;
-
-  const lang = e.target.dataset.lang;
-  const words = Array.from(e.target.parentElement.querySelectorAll(".word"));
-  const index = words.indexOf(e.target);
-  const restWords = words.slice(index);
-
-  speakWordsSequentially(restWords, lang);
 });
 
-document.addEventListener("mouseover", (e) => {
-  if (e.target.classList.contains("word")) {
-    clearHighlights();
-    e.target.classList.add("highlight");
-    const word = e.target.textContent;
-    const lang = e.target.dataset.lang;
-    speak(word, lang);
-  }
-});
+function handleHover(span, lang) {
+  clearHighlight();
+  span.classList.add('highlight');
+  speakWord(span.textContent.trim(), lang);
+}
 
-function speak(text, lang) {
-  if (!voicesLoaded) {
-    console.warn("Voices not loaded yet.");
-    return;
-  }
+function handleClick(span, lang, words) {
+  clearHighlight();
+  const startIndex = parseInt(span.dataset.index);
+  const sentence = words.slice(startIndex).join(' ');
+  speakSentence(sentence, lang, startIndex);
+}
 
-  const utterance = new SpeechSynthesisUtterance(text);
+function speakWord(word, lang) {
+  const utterance = new SpeechSynthesisUtterance(word);
   utterance.lang = lang;
-
-  if (voiceMap[lang.slice(0, 2)]) {
-    utterance.voice = voiceMap[lang.slice(0, 2)];
-  }
-
-  speechSynthesis.cancel();
+  utterance.rate = 3.5; // SPEED UP to 3.5x
   speechSynthesis.speak(utterance);
 }
 
-function speakWordsSequentially(words, lang) {
-  speechSynthesis.cancel();
-  let i = 0;
+function speakSentence(sentence, lang, startIndex) {
+  const utterance = new SpeechSynthesisUtterance(sentence);
+  utterance.lang = lang;
+  utterance.rate = 3.5; // SPEED UP to 3.5x
 
-  function speakNext() {
-    if (i > 0) words[i - 1].classList.remove("highlight");
+  const allSpans = document.querySelectorAll(`[data-lang="${lang}"] .word`);
 
-    if (i < words.length) {
-      const word = words[i];
-      word.classList.add("highlight");
-
-      const utter = new SpeechSynthesisUtterance(word.textContent);
-      utter.lang = lang;
-
-      if (voiceMap[lang.slice(0, 2)]) {
-        utter.voice = voiceMap[lang.slice(0, 2)];
-      }
-
-      utter.onend = () => {
-        i++;
-        speakNext();
-      };
-
-      speechSynthesis.speak(utter);
-    } else if (i === words.length) {
-      words[i - 1].classList.remove("highlight");
+  utterance.onboundary = (event) => {
+    if (event.name === 'word') {
+      const wordIndex = startIndex + getWordIndex(sentence, event.charIndex);
+      highlightWord(allSpans, wordIndex);
     }
-  }
+  };
 
-  speakNext();
+  utterance.onend = () => {
+    clearHighlight();
+  };
+
+  speechSynthesis.speak(utterance);
 }
 
-function clearHighlights() {
-  document.querySelectorAll(".highlight").forEach(el =>
-    el.classList.remove("highlight")
-  );
+function getWordIndex(text, charIndex) {
+  const before = text.slice(0, charIndex);
+  return before.trim().split(/\s+/).length - 1;
+}
+
+function highlightWord(spans, index) {
+  clearHighlight();
+  const span = Array.from(spans).find(s => parseInt(s.dataset.index) === index);
+  if (span) {
+    span.classList.add('highlight');
+  }
+}
+
+function clearHighlight() {
+  document.querySelectorAll('.highlight').forEach(span => {
+    span.classList.remove('highlight');
+  });
 }
