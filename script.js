@@ -46,7 +46,7 @@ document.querySelectorAll(".sentence").forEach(div => {
       span.classList.add("highlight");
       const tempUtter = new SpeechSynthesisUtterance(span.textContent);
       tempUtter.lang = lang;
-      tempUtter.rate = 3.5;
+      tempUtter.rate = 2;
       speechSynthesis.cancel();
       speechSynthesis.speak(tempUtter);
     });
