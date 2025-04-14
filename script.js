@@ -14,7 +14,7 @@ function speakFromWord(span, lang) {
   const startIndex = spans.indexOf(span);
   const utter = new SpeechSynthesisUtterance();
   utter.lang = lang;
-  utter.rate = 2;
+  utter.rate = 1;
 
   const wordsToSpeak = spans.slice(startIndex).map(s => s.textContent).join(" ");
   utter.text = wordsToSpeak;
