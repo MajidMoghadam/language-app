@@ -1,52 +1,42 @@
-// Initialize speech synthesis settings
-let currentLang = 'en';
+document.addEventListener("DOMContentLoaded", function() {
+  const textElements = document.querySelectorAll('.text');
 
-function handleWordClick(event) {
-    const word = event.target;
-    const sentence = word.parentNode;
-    
-    // Reset highlight
-    Array.from(sentence.children).forEach(child => {
-        child.classList.remove('highlight');
+  textElements.forEach((textElement) => {
+    textElement.addEventListener('mouseover', function() {
+      // Highlight the word on hover
+      textElement.style.backgroundColor = 'yellow';
+      const lang = textElement.dataset.lang;
+
+      // Synthesize speech for the word
+      responsiveVoice.speak(textElement.textContent, lang);
     });
 
-    // Highlight the clicked word and play sound
-    word.classList.add('highlight');
-    const text = sentence.innerText;
-    responsiveVoice.speak(text, getVoiceForLang(currentLang), {
-        rate: 1.3, // Adjust rate of speech
-        onstart: function () {
-            word.classList.add('highlight');
+    textElement.addEventListener('mouseout', function() {
+      // Remove highlight on mouse out
+      textElement.style.backgroundColor = '';
+    });
+
+    textElement.addEventListener('click', function() {
+      // Highlight the word and speak the full sentence when clicked
+      textElement.style.backgroundColor = 'yellow';
+      const lang = textElement.dataset.lang;
+      responsiveVoice.speak(textElement.textContent, lang);
+      
+      // Sync highlighting with speaking
+      const words = textElement.textContent.split(" ");
+      let wordIndex = 0;
+
+      // Function to highlight and speak each word
+      const highlightWord = () => {
+        if (wordIndex < words.length) {
+          textElement.innerHTML = textElement.textContent.replace(words[wordIndex], `<span style="background-color: yellow">${words[wordIndex]}</span>`);
+          responsiveVoice.speak(words[wordIndex], lang);
+          wordIndex++;
+          setTimeout(highlightWord, 500); // Adjust time to suit the voice speed
         }
-    });
-}
+      };
 
-// Function to get the correct voice for the language
-function getVoiceForLang(lang) {
-    switch (lang) {
-        case 'fr': return 'French Female';
-        case 'ar': return 'Arabic Female';
-        case 'fa': return 'Persian Female';
-        default: return 'US English Female';
-    }
-}
-
-// Add event listeners to each word in the text
-document.querySelectorAll('.text-content').forEach(sentence => {
-    sentence.addEventListener('click', handleWordClick);
-});
-
-// Add hover functionality for text highlighting
-document.querySelectorAll('.text-content').forEach(sentence => {
-    sentence.addEventListener('mouseover', function (event) {
-        if (event.target.tagName === 'SPAN') {
-            event.target.classList.add('highlight');
-            responsiveVoice.speak(event.target.innerText, getVoiceForLang(currentLang), {rate: 1.3});
-        }
+      highlightWord();
     });
-    sentence.addEventListener('mouseout', function (event) {
-        if (event.target.tagName === 'SPAN') {
-            event.target.classList.remove('highlight');
-        }
-    });
+  });
 });
