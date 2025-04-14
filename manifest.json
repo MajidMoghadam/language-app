@@ -1,11 +1,10 @@
 {
-  "name": "Language Learner App",
-  "short_name": "LangApp",
+  "name": "Multilingual Voice App",
+  "short_name": "VoiceApp",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#222222",
-  "description": "Tap to speak and highlight words across multiple languages.",
+  "theme_color": "#007BFF",
   "icons": [
     {
       "src": "icon-192.png",

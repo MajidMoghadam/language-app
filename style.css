@@ -1,32 +1,27 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 2rem;
-  background: #f4f4f4;
-  color: #333;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
 }
 
-.language-section {
-  margin-bottom: 2rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.sentence {
+.container {
+  max-width: 800px;
+  margin: auto;
   font-size: 2rem;
-  font-weight: 600;
-  line-height: 2.5rem;
-  cursor: pointer;
+  font-weight: bold;
+  line-height: 2;
 }
 
 .word {
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.3rem;
-  transition: background 0.3s;
+  cursor: pointer;
+  padding: 0 5px;
 }
 
-.word.hovered {
-  background: yellow;
+.word:hover {
+  background-color: yellow;
+}
+
+.highlight {
+  background-color: yellow !important;
 }

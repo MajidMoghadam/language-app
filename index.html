@@ -3,32 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#222222" />
-  <title>Language Learner</title>
+  <title>Multilingual Voice App</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <div class="language-section">
-    <h2>English</h2>
-    <p class="sentence" lang="en">The quick brown fox jumps over the lazy dog.</p>
-  </div>
-
-  <div class="language-section">
-    <h2>French</h2>
-    <p class="sentence" lang="fr">Le renard brun rapide saute par-dessus le chien paresseux.</p>
-  </div>
-
-  <div class="language-section" dir="rtl">
-    <h2>Arabic</h2>
-    <p class="sentence" lang="ar">الثعلب البني السريع يقفز فوق الكلب الكسول.</p>
-  </div>
-
-  <div class="language-section" dir="rtl">
-    <h2>Persian</h2>
-    <p class="sentence" lang="fa">روباه قهوه‌ای تند از روی سگ تنبل می‌پرد.</p>
+  <div class="container">
+    <p lang="en">This is a test sentence in English.</p>
+    <p lang="fr">Ceci est une phrase de test en français.</p>
+    <p lang="ar" dir="rtl">هذه جملة اختبار باللغة العربية.</p>
+    <p lang="fa" dir="rtl">این یک جمله تستی به زبان فارسی است.</p>
   </div>
 
   <script src="script.js"></script>
+
+  <!-- ✅ Register the Service Worker for PWA support -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('✅ Service Worker Registered'))
+        .catch(error => console.error('Service Worker registration failed:', error));
+    }
+  </script>
 </body>
 </html>
