@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text to Speech Demo</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY_HERE"></script> <!-- Add your key here -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multilingual Text-to-Speech</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=iE3dlHHe"></script>
 </head>
 <body>
-
-    <div id="container">
-        <div id="english" class="text-content">Hello, the weather is very nice today.</div>
-        <div id="french" class="text-content">Bonjour, le temps est très agréable aujourd'hui.</div>
-        <div id="arabic" class="text-content">مرحبًا، الطقس جميل جدًا اليوم.</div>
-        <div id="persian" class="text-content">سلام، امروز هوا خیلی خوب است.</div>
+  <div id="content">
+    <h1>Multilingual Text-to-Speech Demo</h1>
+    <div id="english" class="language">
+      <p class="text" data-lang="en">Hello, how are you today?</p>
     </div>
-
-    <script src="script.js"></script>
+    <div id="french" class="language">
+      <p class="text" data-lang="fr">Bonjour, comment ça va aujourd'hui?</p>
+    </div>
+    <div id="arabic" class="language">
+      <p class="text" data-lang="ar">مرحباً، كيف حالك اليوم؟</p>
+    </div>
+    <div id="persian" class="language">
+      <p class="text" data-lang="fa">سلام، امروز حالتان چطور است؟</p>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
 </body>
 </html>
