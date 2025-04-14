@@ -1,73 +1,52 @@
-function wrapWords(element) {
-  const words = element.textContent.trim().split(/\s+/);
-  element.innerHTML = "";
-  words.forEach(word => {
-    const span = document.createElement("span");
-    span.textContent = word;
-    element.appendChild(span);
-    element.appendChild(document.createTextNode(" "));
-  });
+// Initialize speech synthesis settings
+let currentLang = 'en';
+
+function handleWordClick(event) {
+    const word = event.target;
+    const sentence = word.parentNode;
+    
+    // Reset highlight
+    Array.from(sentence.children).forEach(child => {
+        child.classList.remove('highlight');
+    });
+
+    // Highlight the clicked word and play sound
+    word.classList.add('highlight');
+    const text = sentence.innerText;
+    responsiveVoice.speak(text, getVoiceForLang(currentLang), {
+        rate: 1.3, // Adjust rate of speech
+        onstart: function () {
+            word.classList.add('highlight');
+        }
+    });
 }
 
-function speakFromWord(span, lang) {
-  const spans = Array.from(span.parentNode.querySelectorAll("span"));
-  const startIndex = spans.indexOf(span);
-  const utter = new SpeechSynthesisUtterance();
-  utter.lang = lang;
-  utter.rate = 1;
-
-  const wordsToSpeak = spans.slice(startIndex).map(s => s.textContent).join(" ");
-  utter.text = wordsToSpeak;
-
-  let currentIndex = startIndex;
-
-  utter.onboundary = (event) => {
-    if (event.name === "word") {
-      spans.forEach(s => s.classList.remove("highlight"));
-      if (spans[currentIndex]) spans[currentIndex].classList.add("highlight");
-      currentIndex++;
+// Function to get the correct voice for the language
+function getVoiceForLang(lang) {
+    switch (lang) {
+        case 'fr': return 'French Female';
+        case 'ar': return 'Arabic Female';
+        case 'fa': return 'Persian Female';
+        default: return 'US English Female';
     }
-  };
-
-  utter.onend = () => {
-    spans.forEach(s => s.classList.remove("highlight"));
-  };
-
-  speechSynthesis.cancel(); // Stop any previous speech
-  speechSynthesis.speak(utter);
 }
 
-document.querySelectorAll(".sentence").forEach(div => {
-  const lang = div.getAttribute("lang");
-  wrapWords(div);
+// Add event listeners to each word in the text
+document.querySelectorAll('.text-content').forEach(sentence => {
+    sentence.addEventListener('click', handleWordClick);
+});
 
-  div.querySelectorAll("span").forEach(span => {
-    span.addEventListener("mouseenter", () => {
-      span.classList.add("highlight");
-      const tempUtter = new SpeechSynthesisUtterance(span.textContent);
-      tempUtter.lang = lang;
-      tempUtter.rate = 1;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(tempUtter);
+// Add hover functionality for text highlighting
+document.querySelectorAll('.text-content').forEach(sentence => {
+    sentence.addEventListener('mouseover', function (event) {
+        if (event.target.tagName === 'SPAN') {
+            event.target.classList.add('highlight');
+            responsiveVoice.speak(event.target.innerText, getVoiceForLang(currentLang), {rate: 1.3});
+        }
     });
-
-    span.addEventListener("mouseleave", () => {
-      span.classList.remove("highlight");
+    sentence.addEventListener('mouseout', function (event) {
+        if (event.target.tagName === 'SPAN') {
+            event.target.classList.remove('highlight');
+        }
     });
-
-    span.addEventListener("click", () => {
-      speakFromWord(span, lang);
-    });
-
-    // For mobile: double tap instead of hover
-    span.addEventListener("touchstart", (e) => {
-      span.classList.add("highlight");
-      const tempUtter = new SpeechSynthesisUtterance(span.textContent);
-      tempUtter.lang = lang;
-      tempUtter.rate = 1;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(tempUtter);
-      setTimeout(() => span.classList.remove("highlight"), 1000);
-    });
-  });
 });
