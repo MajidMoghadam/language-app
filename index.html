@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Multilingual Language Learner</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#222222" />
+  <title>Language Learner</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
+  <div class="language-section">
+    <h2>English</h2>
+    <p class="sentence" lang="en">The quick brown fox jumps over the lazy dog.</p>
+  </div>
 
-<div id="container">
-    <div class="sentence-block" data-lang="en">
-        <p class="sentence" dir="ltr">Hello, the weather is very nice today.</p>
-    </div>
+  <div class="language-section">
+    <h2>French</h2>
+    <p class="sentence" lang="fr">Le renard brun rapide saute par-dessus le chien paresseux.</p>
+  </div>
 
-    <div class="sentence-block" data-lang="fr">
-        <p class="sentence" dir="ltr">Bonjour, le temps est très agréable aujourd'hui.</p>
-    </div>
+  <div class="language-section" dir="rtl">
+    <h2>Arabic</h2>
+    <p class="sentence" lang="ar">الثعلب البني السريع يقفز فوق الكلب الكسول.</p>
+  </div>
 
-    <div class="sentence-block" data-lang="ar">
-        <p class="sentence" dir="rtl">مرحبًا، الطقس جميل جدًا اليوم.</p>
-    </div>
+  <div class="language-section" dir="rtl">
+    <h2>Persian</h2>
+    <p class="sentence" lang="fa">روباه قهوه‌ای تند از روی سگ تنبل می‌پرد.</p>
+  </div>
 
-    <div class="sentence-block" data-lang="fa">
-        <p class="sentence" dir="rtl">سلام، هوا امروز بسیار خوب است.</p>
-    </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

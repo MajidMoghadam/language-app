@@ -1,79 +1,80 @@
-const voiceMap = {
-    'en': 'en-US',
-    'fr': 'fr-FR',
-    'ar': 'ar-SA',
-    'fa': 'fa-IR'
-};
+document.querySelectorAll('.sentence').forEach(p => {
+  const lang = p.getAttribute('lang');
+  const words = p.textContent.trim().split(' ');
+  p.innerHTML = '';
 
-// Process each sentence block
-document.querySelectorAll('.sentence-block').forEach(block => {
-    const lang = block.dataset.lang;
-    const sentenceEl = block.querySelector('.sentence');
-    const originalText = sentenceEl.innerText.trim();
-    const words = originalText.split(/\s+/);
+  words.forEach((word, idx) => {
+    const span = document.createElement('span');
+    span.textContent = word;
+    span.classList.add('word');
+    span.dataset.index = idx;
+    p.appendChild(span);
+    if (idx !== words.length - 1) {
+      p.appendChild(document.createTextNode(' '));
+    }
 
-    // Replace with span-wrapped words
-    sentenceEl.innerHTML = '';
-    words.forEach((word, i) => {
-        const span = document.createElement('span');
-        span.classList.add('word');
-        span.innerText = word;
-        span.dataset.index = i;
-        sentenceEl.appendChild(span);
-        sentenceEl.append(' '); // space between words
-
-        // Hover: speak just the word
-        span.addEventListener('mouseenter', () => {
-            speak(word, voiceMap[lang]);
-        });
-
-        // Click: speak word + remainder with synced highlighting
-        span.addEventListener('click', () => {
-            const remainingWords = words.slice(i);
-            highlightSequence(sentenceEl, i, remainingWords, voiceMap[lang]);
-        });
+    // Single tap (hover replacement)
+    span.addEventListener('click', e => {
+      e.stopPropagation();
+      speakWord(word, lang);
+      highlight(span);
     });
+
+    // Double tap or double click: speak sentence from word
+    span.addEventListener('dblclick', e => {
+      e.stopPropagation();
+      speakSentenceFrom(span, lang);
+    });
+  });
 });
 
-function speak(text, lang = 'en-US') {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    window.speechSynthesis.speak(utterance);
+function speakWord(word, lang) {
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang = lang;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
 }
 
-function highlightSequence(container, startIndex, wordArray, lang) {
-    window.speechSynthesis.cancel();
+function speakSentenceFrom(startSpan, lang) {
+  const container = startSpan.parentElement;
+  const allSpans = Array.from(container.querySelectorAll('.word'));
+  const startIndex = allSpans.indexOf(startSpan);
+  const toSpeak = allSpans.slice(startIndex);
 
-    const spans = container.querySelectorAll('.word');
-    spans.forEach(span => span.style.backgroundColor = ''); // Clear all highlights
+  window.speechSynthesis.cancel();
 
-    const fullSentence = wordArray.join(' ');
-    const utterance = new SpeechSynthesisUtterance(fullSentence);
-    utterance.lang = lang;
+  let i = 0;
+  function speakNext() {
+    if (i > 0) allSpans[startIndex + i - 1].classList.remove('hovered');
+    if (i >= toSpeak.length) return;
 
-    let currentWord = 0;
+    const wordSpan = toSpeak[i];
+    const utter = new SpeechSynthesisUtterance(wordSpan.textContent);
+    utter.lang = lang;
 
-    utterance.onboundary = function (event) {
-        if (event.name === 'word') {
-            const index = startIndex + currentWord;
-
-            // Clear all highlights
-            spans.forEach(span => span.style.backgroundColor = '');
-
-            // Highlight current word
-            if (spans[index]) {
-                spans[index].style.backgroundColor = 'yellow';
-            }
-
-            currentWord++;
-        }
+    utter.onstart = () => {
+      wordSpan.classList.add('hovered');
+    };
+    utter.onend = () => {
+      wordSpan.classList.remove('hovered');
+      i++;
+      speakNext();
     };
 
-    utterance.onend = () => {
-        // Clear all highlights after speaking
-        spans.forEach(span => span.style.backgroundColor = '');
-    };
+    window.speechSynthesis.speak(utter);
+  }
 
-    window.speechSynthesis.speak(utterance);
+  speakNext();
+}
+
+function highlight(span) {
+  document.querySelectorAll('.word').forEach(w => w.classList.remove('hovered'));
+  span.classList.add('hovered');
+}
+
+// PWA service worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(reg => console.log('Service Worker registered:', reg.scope))
+    .catch(err => console.error('Service Worker registration failed:', err));
 }
