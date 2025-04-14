@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 0;
+}
+
+#container {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.sentence-block {
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.sentence {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.word {
+    cursor: pointer;
+    padding: 4px 6px;
+    margin-right: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.word:hover {
+    background-color: yellow;
+}
