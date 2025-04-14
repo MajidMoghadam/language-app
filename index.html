@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multilingual TTS Highlighter</title>
-  <link rel="stylesheet" href="style.css?v=1.2">
-  <link rel="manifest" href="manifest.json" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=YOUR_KEY_HERE"></script> <!-- Add your key here -->
 </head>
 <body>
-  <h1>Multilingual TTS Highlighter</h1>
 
-  <div class="sentence" lang="en">The quick brown fox jumps over the lazy dog.</div>
-  <div class="sentence" lang="fr">Le renard brun rapide saute par-dessus le chien paresseux.</div>
-  <div class="sentence" lang="ar" dir="rtl">الثعلب البني السريع يقفز فوق الكلب الكسول.</div>
-  <div class="sentence" lang="fa" dir="rtl">روباه قهوه‌ای سریع از روی سگ تنبل می‌پرد.</div>
+    <div id="container">
+        <div id="english" class="text-content">Hello, the weather is very nice today.</div>
+        <div id="french" class="text-content">Bonjour, le temps est très agréable aujourd'hui.</div>
+        <div id="arabic" class="text-content">مرحبًا، الطقس جميل جدًا اليوم.</div>
+        <div id="persian" class="text-content">سلام، امروز هوا خیلی خوب است.</div>
+    </div>
 
-  <script src="script.js?v=1.2"></script>
+    <script src="script.js"></script>
 </body>
 </html>
