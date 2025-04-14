@@ -3,27 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multilingual Voice App</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Multilingual TTS Highlighter</title>
+  <link rel="stylesheet" href="style.css?v=1.2">
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <div class="container">
-    <p lang="en">This is a test sentence in English.</p>
-    <p lang="fr">Ceci est une phrase de test en français.</p>
-    <p lang="ar" dir="rtl">هذه جملة اختبار باللغة العربية.</p>
-    <p lang="fa" dir="rtl">این یک جمله تستی به زبان فارسی است.</p>
-  </div>
+  <h1>Multilingual TTS Highlighter</h1>
 
-  <script src="script.js"></script>
+  <div class="sentence" lang="en">The quick brown fox jumps over the lazy dog.</div>
+  <div class="sentence" lang="fr">Le renard brun rapide saute par-dessus le chien paresseux.</div>
+  <div class="sentence" lang="ar" dir="rtl">الثعلب البني السريع يقفز فوق الكلب الكسول.</div>
+  <div class="sentence" lang="fa" dir="rtl">روباه قهوه‌ای سریع از روی سگ تنبل می‌پرد.</div>
 
-  <!-- ✅ Register the Service Worker for PWA support -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('✅ Service Worker Registered'))
-        .catch(error => console.error('Service Worker registration failed:', error));
-    }
-  </script>
+  <script src="script.js?v=1.2"></script>
 </body>
 </html>
